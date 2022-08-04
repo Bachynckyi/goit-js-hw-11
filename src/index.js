@@ -1,13 +1,14 @@
 import SimpleLightbox from "simplelightbox";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import getImage from "./webApi.js";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 const inputArea = document.querySelector(".search-input");
 const submitButton = document.querySelector(".submit-button");
 const gallery = document.querySelector(".gallery");
 const loadButton = document.querySelector(".load-more");
 
-submitButton.addEventListener('submit', onSearch);
+submitButton.addEventListener('click', onSearch);
 
 
 async function onSearch(event) {
