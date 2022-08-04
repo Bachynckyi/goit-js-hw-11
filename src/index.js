@@ -17,11 +17,12 @@ async function onSearch(event) {
     try {
         const data = await getImage(searchQuery);
         console.log(data);
-        if (data.totalHits === 0) {
+        if (data.totalHits === 0 || searchQuery === "") {
             return Notify.failure('Sorry, there are no images matching your search query. Please try again.')
         }
         Notify.info(`Hooray! We found ${data.totalHits} images.`)
         gallery.innerHTML = galleryMarkUp(data.hits);
+        lightBox();
     }
     catch (error) {
         console.log(error);
@@ -33,7 +34,9 @@ function galleryMarkUp(serverArray) {
         .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
             return `                 
         <div class="photo-card">
+        <a href="${largeImageURL}">
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+        </a>
         <div class="info">
             <p class="info-item">
             <b>Likes</b>${likes}
@@ -55,4 +58,16 @@ function galleryMarkUp(serverArray) {
 
 function clearGallery() {
     gallery.innerHTML = "";
+};
+
+
+function lightBox() {
+    let lightbox = new SimpleLightbox('.gallery a', {
+        captions: true,
+        captionsData: "alt",
+        captionsPosition: "bottom",
+        captionsDelay: 250,
+        showCounter: false,
+        enableKeyboard: true,
+    });
 };
