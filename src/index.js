@@ -1,6 +1,6 @@
 import SimpleLightbox from "simplelightbox";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import getImage from "./webApi.js";
+import serviceAPI from './serviceAPI.js'
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 const inputArea = document.querySelector(".search-input");
@@ -8,20 +8,24 @@ const submitButton = document.querySelector(".submit-button");
 const gallery = document.querySelector(".gallery");
 const loadButton = document.querySelector(".load-more");
 
+const serviceApi = new serviceAPI();
+
 submitButton.addEventListener('click', onSearch);
+loadButton.addEventListener('click', onLoadMore);
 
-
+  
 async function onSearch(event) {
     event.preventDefault();
-    let searchQuery = inputArea.value.trim();
+    serviceApi.query = inputArea.value.trim();
+    serviceApi.resetPage();
     try {
-        const data = await getImage(searchQuery);
+        const data = await serviceApi.fetchQuery();  
         console.log(data);
-        if (data.totalHits === 0 || searchQuery === "") {
+        if (data.totalHits === 0 || serviceApi.query === "") {
             return Notify.failure('Sorry, there are no images matching your search query. Please try again.')
         }
         Notify.info(`Hooray! We found ${data.totalHits} images.`)
-        gallery.innerHTML = galleryMarkUp(data.hits);
+        appendCardsMarkup(data.hits);
         lightBox();
     }
     catch (error) {
@@ -56,11 +60,6 @@ function galleryMarkUp(serverArray) {
         .join('');
 };
 
-function clearGallery() {
-    gallery.innerHTML = "";
-};
-
-
 function lightBox() {
     let lightbox = new SimpleLightbox('.gallery a', {
         captions: true,
@@ -71,3 +70,36 @@ function lightBox() {
         enableKeyboard: true,
     });
 };
+
+async function onLoadMore() {
+    try {
+        const data = await serviceApi.fetchQuery();
+    console.log(data);
+    appendCardsMarkup(data.hits)
+    }
+    catch (error) {
+        console.log(error);
+    }
+};
+
+function appendCardsMarkup(items) {
+    gallery.insertAdjacentHTML('beforeend', galleryMarkUp(items));
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
