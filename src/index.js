@@ -19,7 +19,7 @@ async function onSearch(event) {
     serviceApi.query = inputArea.value.trim();
     serviceApi.resetPage();
     clearGallery();
-    window.addEventListener('scroll', endlessScroll);
+    window.addEventListener('scroll', endLessScroll);
     try {
         const data = await serviceApi.fetchQuery();  
         if (data.totalHits === 0 || serviceApi.query === "") {
@@ -43,7 +43,7 @@ async function onLoadMore() {
     smoothScroll();
     appendedImages += data.hits.length;
     if(appendedImages >= data.totalHits) {
-        window.removeEventListener('scroll', endlessScroll);
+        window.removeEventListener('scroll', endLessScroll);
         load.innerHTML = `<span class="load-message">We're sorry, but you've reached the end of search results.</span>`;
         };
     }
@@ -110,14 +110,19 @@ function smoothScroll(){
     });
 };
 
-function endlessScroll() {
-    const documentRect = document.documentElement.getBoundingClientRect();
-    if (documentRect.bottom <= document.documentElement.clientHeight + 100) {
-        onLoadMore();
-    };
+// function endlessScroll() {
+//     const documentRect = document.documentElement.getBoundingClientRect();
+//     if (documentRect.bottom <= document.documentElement.clientHeight + 100) {
+//         onLoadMore();
+//     };
+// };
+
+function endLessScroll() {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+  if (clientHeight + scrollTop >= scrollHeight) {
+    onLoadMore();
+  }
 };
-
-
 
 
 
