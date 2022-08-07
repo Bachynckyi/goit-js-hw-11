@@ -6,7 +6,6 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 const inputArea = document.querySelector(".search-input");
 const submitForm = document.querySelector("#search-form");
 const gallery = document.querySelector(".gallery");
-const loadButton = document.querySelector(".load-more");
 
 const serviceApi = new serviceAPI();
 let lightbox = {};
@@ -28,8 +27,6 @@ async function onSearch(event) {
         Notify.info(`Hooray! We found ${data.totalHits} images.`)
         appendCardsMarkup(data.hits);
         lightBox();
-        loadButton.classList.remove('is-hidden');
-        loadButton.removeAttribute('disabled', true);
         appendedImages = data.hits.length;
     }
     catch (error) {
@@ -46,7 +43,6 @@ async function onLoadMore() {
     appendedImages += data.hits.length;
     if(appendedImages >= data.totalHits) {
         window.removeEventListener('scroll', endlessScroll);
-        loadButton.classList.add('is-hidden');
         Notify.failure("We're sorry, but you've reached the end of search results." , {timeout: 100000});
         };
     }
@@ -114,7 +110,7 @@ function smoothScrol(){
 
 function endlessScroll() {
     const documentRect = document.documentElement.getBoundingClientRect();
-    if (documentRect.bottom < document.documentElement.clientHeight + 150) {
+    if (documentRect.bottom < document.documentElement.clientHeight + 50) {
         onLoadMore();
     };
 };
