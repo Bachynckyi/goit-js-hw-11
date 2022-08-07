@@ -110,18 +110,11 @@ function smoothScroll(){
     });
 };
 
-// function endlessScroll() {
-//     const documentRect = document.documentElement.getBoundingClientRect();
-//     if (documentRect.bottom <= document.documentElement.clientHeight + 100) {
-//         onLoadMore();
-//     };
-// };
-
 function endLessScroll() {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
   if (clientHeight + scrollTop >= scrollHeight) {
     onLoadMore();
-  }
+  };
 };
 
 
