@@ -4,13 +4,15 @@ import serviceAPI from './serviceAPI.js'
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 const inputArea = document.querySelector(".search-input");
-const submitButton = document.querySelector(".submit-button");
+const submitForm = document.querySelector("#search-form");
 const gallery = document.querySelector(".gallery");
 const loadButton = document.querySelector(".load-more");
 
 const serviceApi = new serviceAPI();
+let lightbox = {};
+let appendedImages = 0;
 
-submitButton.addEventListener('click', onSearch);
+submitForm.addEventListener('submit', onSearch);
 loadButton.addEventListener('click', onLoadMore);
 
   
@@ -18,6 +20,7 @@ async function onSearch(event) {
     event.preventDefault();
     serviceApi.query = inputArea.value.trim();
     serviceApi.resetPage();
+    clearGallery();
     try {
         const data = await serviceApi.fetchQuery();  
         console.log(data);
@@ -27,6 +30,26 @@ async function onSearch(event) {
         Notify.info(`Hooray! We found ${data.totalHits} images.`)
         appendCardsMarkup(data.hits);
         lightBox();
+        loadButton.classList.remove('is-hidden');
+        loadButton.removeAttribute('disabled', true);
+        appendedImages = data.hits.length;
+    }
+    catch (error) {
+        console.log(error);
+    }
+};
+
+async function onLoadMore() {
+    try {
+    const data = await serviceApi.fetchQuery();
+    console.log(data);
+    appendCardsMarkup(data.hits)
+    lightbox.refresh();
+    appendedImages += data.hits.length;
+    if(appendedImages >= data.totalHits) {
+        loadButton.classList.add('is-hidden');
+        Notify.failure("We're sorry, but you've reached the end of search results." , {timeout: 100000});
+        }
     }
     catch (error) {
         console.log(error);
@@ -61,7 +84,7 @@ function galleryMarkUp(serverArray) {
 };
 
 function lightBox() {
-    let lightbox = new SimpleLightbox('.gallery a', {
+        lightbox = new SimpleLightbox('.gallery a', {
         captions: true,
         captionsData: "alt",
         captionsPosition: "bottom",
@@ -71,26 +94,13 @@ function lightBox() {
     });
 };
 
-async function onLoadMore() {
-    try {
-        const data = await serviceApi.fetchQuery();
-    console.log(data);
-    appendCardsMarkup(data.hits)
-    }
-    catch (error) {
-        console.log(error);
-    }
-};
-
 function appendCardsMarkup(items) {
     gallery.insertAdjacentHTML('beforeend', galleryMarkUp(items));
-  }
+};
 
-
-
-
-
-
+function clearGallery(){
+    gallery.innerHTML = "";
+};
 
 
 
