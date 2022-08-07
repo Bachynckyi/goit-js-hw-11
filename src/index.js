@@ -13,14 +13,13 @@ let lightbox = {};
 let appendedImages = 0;
 
 submitForm.addEventListener('submit', onSearch);
-loadButton.addEventListener('click', onLoadMore);
-
   
 async function onSearch(event) {
     event.preventDefault();
     serviceApi.query = inputArea.value.trim();
     serviceApi.resetPage();
     clearGallery();
+    window.addEventListener('scroll', endlessScroll);
     try {
         const data = await serviceApi.fetchQuery();  
         if (data.totalHits === 0 || serviceApi.query === "") {
@@ -38,7 +37,6 @@ async function onSearch(event) {
     }
 };
 
-
 async function onLoadMore() {
     try {
     const data = await serviceApi.fetchQuery();
@@ -47,6 +45,7 @@ async function onLoadMore() {
     smoothScrol();
     appendedImages += data.hits.length;
     if(appendedImages >= data.totalHits) {
+        window.removeEventListener('scroll', endlessScroll);
         loadButton.classList.add('is-hidden');
         Notify.failure("We're sorry, but you've reached the end of search results." , {timeout: 100000});
         };
@@ -113,8 +112,12 @@ function smoothScrol(){
     });
 };
 
-
-
+function endlessScroll() {
+    const documentRect = document.documentElement.getBoundingClientRect();
+    if (documentRect.bottom < document.documentElement.clientHeight + 150) {
+        onLoadMore();
+    };
+};
 
 
 
