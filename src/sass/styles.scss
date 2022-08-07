@@ -87,31 +87,18 @@
     line-height: 150%;
 };
 
-// Button load more
+// load more
 
-.button-load {
+.load-message {
     display: flex;
     justify-content: center;
-}
-
-.load-more {
+    font-size: large;
+    font-weight: 500;
     margin-top: 30px;
     margin-bottom: 30px;
-    color: #fff;
-    background-color: rgb(149, 149, 241);;
-    width: 120px;
-    height: 30px;
-    border: none;
-    border-radius: 3px;
-
-
-    &:hover {
-        background-color: rgb(109, 109, 233);
-        cursor: pointer;
-    }
-
+    color: red;
 };
 
 .is-hidden {
     display: none;
-}
+};

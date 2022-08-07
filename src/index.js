@@ -6,6 +6,7 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 const inputArea = document.querySelector(".search-input");
 const submitForm = document.querySelector("#search-form");
 const gallery = document.querySelector(".gallery");
+const load = document.querySelector(".button-load")
 
 const serviceApi = new serviceAPI();
 let lightbox = {};
@@ -43,7 +44,7 @@ async function onLoadMore() {
     appendedImages += data.hits.length;
     if(appendedImages >= data.totalHits) {
         window.removeEventListener('scroll', endlessScroll);
-        Notify.failure("We're sorry, but you've reached the end of search results." , {timeout: 100000});
+        load.insertAdjacentHTML('beforeend', loadMessage());
         };
     }
     catch (error) {
@@ -95,6 +96,7 @@ function appendCardsMarkup(items) {
 
 function clearGallery(){
     gallery.innerHTML = "";
+    load.innerHTML = "";
 };
 
 function smoothScroll(){
@@ -110,12 +112,14 @@ function smoothScroll(){
 
 function endlessScroll() {
     const documentRect = document.documentElement.getBoundingClientRect();
-    if (documentRect.bottom < document.documentElement.clientHeight + 150) {
+    if (documentRect.bottom <= document.documentElement.clientHeight) {
         onLoadMore();
     };
 };
 
-
+function loadMessage() {
+    return `<span class="load-message">We're sorry, but you've reached the end of search results.</span>`;
+}
 
 
 
