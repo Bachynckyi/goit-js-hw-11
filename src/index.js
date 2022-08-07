@@ -44,7 +44,7 @@ async function onLoadMore() {
     appendedImages += data.hits.length;
     if(appendedImages >= data.totalHits) {
         window.removeEventListener('scroll', endlessScroll);
-        load.insertAdjacentHTML('beforeend', loadMessage());
+        load.innerHTML = `<span class="load-message">We're sorry, but you've reached the end of search results.</span>`;
         };
     }
     catch (error) {
@@ -112,14 +112,11 @@ function smoothScroll(){
 
 function endlessScroll() {
     const documentRect = document.documentElement.getBoundingClientRect();
-    if (documentRect.bottom <= document.documentElement.clientHeight) {
+    if (documentRect.bottom <= document.documentElement.clientHeight + 100) {
         onLoadMore();
     };
 };
 
-function loadMessage() {
-    return `<span class="load-message">We're sorry, but you've reached the end of search results.</span>`;
-}
 
 
 
