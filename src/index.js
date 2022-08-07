@@ -23,7 +23,6 @@ async function onSearch(event) {
     clearGallery();
     try {
         const data = await serviceApi.fetchQuery();  
-        console.log(data);
         if (data.totalHits === 0 || serviceApi.query === "") {
             return Notify.failure('Sorry, there are no images matching your search query. Please try again.')
         }
@@ -39,21 +38,22 @@ async function onSearch(event) {
     }
 };
 
+
 async function onLoadMore() {
     try {
     const data = await serviceApi.fetchQuery();
-    console.log(data);
-    appendCardsMarkup(data.hits)
+    appendCardsMarkup(data.hits);
     lightbox.refresh();
+    smoothScrol();
     appendedImages += data.hits.length;
     if(appendedImages >= data.totalHits) {
         loadButton.classList.add('is-hidden');
         Notify.failure("We're sorry, but you've reached the end of search results." , {timeout: 100000});
-        }
+        };
     }
     catch (error) {
         console.log(error);
-    }
+    };
 };
 
 function galleryMarkUp(serverArray) {
@@ -102,8 +102,16 @@ function clearGallery(){
     gallery.innerHTML = "";
 };
 
-
-
+function smoothScrol(){
+    const { height: cardHeight } = document
+        .querySelector('.gallery')
+        .firstElementChild.getBoundingClientRect();
+    
+    window.scrollBy({
+        top: cardHeight * 2,
+        behavior: 'smooth',
+    });
+};
 
 
 
