@@ -39,7 +39,7 @@ async function onLoadMore() {
     const data = await serviceApi.fetchQuery();
     appendCardsMarkup(data.hits);
     lightbox.refresh();
-    smoothScrol();
+    smoothScroll();
     appendedImages += data.hits.length;
     if(appendedImages >= data.totalHits) {
         window.removeEventListener('scroll', endlessScroll);
@@ -97,7 +97,7 @@ function clearGallery(){
     gallery.innerHTML = "";
 };
 
-function smoothScrol(){
+function smoothScroll(){
     const { height: cardHeight } = document
         .querySelector('.gallery')
         .firstElementChild.getBoundingClientRect();
@@ -110,7 +110,7 @@ function smoothScrol(){
 
 function endlessScroll() {
     const documentRect = document.documentElement.getBoundingClientRect();
-    if (documentRect.bottom < document.documentElement.clientHeight + 50) {
+    if (documentRect.bottom < document.documentElement.clientHeight + 150) {
         onLoadMore();
     };
 };
